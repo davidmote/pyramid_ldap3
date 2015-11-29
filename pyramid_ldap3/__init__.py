@@ -329,7 +329,7 @@ def ldap_set_groups_query(
 
 def ldap_setup(
         config, uri,
-        bind=None, passwd=None, use_tls=False, use_pool=True, pool_size=10):
+        bind=None, passwd=None, use_tls=False, use_pool=True, pool_size=10, pool_lifetime=None):
     """Configurator method to set up an LDAP connection pool.
 
     - **uri**: ldap server uri(s) **[mandatory]**
@@ -341,10 +341,11 @@ def ldap_setup(
     - **use_pool**: activates the pool. If False, will recreate a connector
        each time. **default: True**
     - **pool_size**: pool size. **default: 10**
+    - **pool_lifetime**: pool lifetime. **default: None**
     """
 
     manager = ConnectionManager(
-        uri, bind, passwd, use_tls, use_pool, pool_size if use_pool else None)
+        uri, bind, passwd, use_tls, use_pool, pool_size if use_pool else None, pool_lifetime if use_pool else None)
 
     def get_connector(request):
         return Connector(request.registry, manager)
